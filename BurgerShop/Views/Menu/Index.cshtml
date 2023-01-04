@@ -1,0 +1,147 @@
+﻿@model IEnumerable<MenuItem>
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<!-- Заголовок -->
+<div class="text-center">
+    <h2 class="display-5">Меню</h2>  
+    <br />
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Бургеры
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Добавить
+            </th>
+            <th>
+                Подробнее
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(item => item.MenuItemType == "burger"))
+        {
+            <form method="post" asp-controller="Cart" asp-action="AddItem">
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a class="add-menu">+</a>
+                        <input name="count" class="number-menu" readonly type="number"/>
+                        <a class="remove-menu">-</a>
+                    </td>
+                    <td>
+                        @Html.Hidden("menuItemName", item.Name)
+                        <input type="submit" class="btn btn-primary" value="Добавить в корзину"/>
+                    </td>
+                    <td>
+                        <a asp-controller="Menu" asp-action="Details" asp-route-burgerName=@item.Name class="btn btn-outline-primary">Подробнее</a>
+                    </td>
+                </tr>
+                </form>
+        }
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>
+                Напитки
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Добавить
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(item => item.MenuItemType == "drink"))
+        {
+            <form method="post" asp-controller="Cart" asp-action="AddItem">
+            <tr>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a class="add-menu">+</a>
+                    <input name="count" class="number-menu" readonly type="number" />
+                    <a class="remove-menu">-</a>
+                </td>
+                <td>
+                    @Html.Hidden("menuItemName", item.Name)
+                    <input type="submit" class="btn btn-primary" value="Добавить в корзину" />
+                </td>
+                <td></td>
+            </tr>
+            </form>
+        }
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>
+                Алкоголь
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Добавить
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(item => item.MenuItemType == "alcohol"))
+        {
+            <form method="post" asp-controller="Cart" asp-action="AddItem">
+            <tr>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a class="add-menu">+</a>
+                    <input name="count" class="number-menu" readonly type="number" />
+                    <a class="remove-menu">-</a>
+                </td>
+                <td>
+                        @Html.Hidden("menuItemName", item.Name)
+                    <input type="submit" class="btn btn-primary" value="Добавить в корзину" />
+                </td>
+                <td></td>
+            </tr>
+            </form>
+        }
+    </tbody>
+</table>
+<a class="btn btn-primary" asp-controller="Cart" asp-action="Index">Готово</a>

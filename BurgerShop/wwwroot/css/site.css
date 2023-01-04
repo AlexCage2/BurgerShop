@@ -1,0 +1,55 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-control:focus {
+    box-shadow: 0px 0px 6px #0d6efd;
+}
+
+.validation-summary-errors ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+.number-menu {
+    width: 40px;
+    padding: 0px;
+}
+
+.add-menu, .remove-menu{
+    outline: none;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 0px 5px;
+}
+
+.add-menu:link, .remove-menu:link {
+    color: black;
+}
+
+.add-menu:visited, .remove-menu:visited {
+    color: black;
+}
+
+.add-menu:hover, .remove-menu:hover {
+    cursor:pointer;
+}
