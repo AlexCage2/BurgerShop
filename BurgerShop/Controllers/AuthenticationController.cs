@@ -1,5 +1,5 @@
 ﻿using BurgerShop.Data;
-using BurgerShop.Models.AuthenticationRequests;
+using BurgerShop.Models.ApplicationModels.AuthenticationRequests;
 using BurgerShop.Models.DataModels.Users;
 using BurgerShop.Services.Authentication;
 using Microsoft.AspNetCore.Authentication;
@@ -14,16 +14,16 @@ namespace BurgerShop.Controllers
     {
         private IClaimsPrincipalGenerator _claimsPrincipalGenerator;
         private IPasswordHandler _passwordHandler;
-        private UserContext _userContext;
+        private IUserRepository _userRepository;
 
         public AuthenticationController(
             IClaimsPrincipalGenerator claimsPrincipalGenerator, 
             IPasswordHandler passwordHandler,
-            UserContext userContext)
+            IUserRepository userRepository)
         {
             _claimsPrincipalGenerator = claimsPrincipalGenerator;
             _passwordHandler = passwordHandler;
-            _userContext = userContext;
+            _userRepository = userRepository;
         }
 
         // GET: Login
@@ -47,7 +47,7 @@ namespace BurgerShop.Controllers
             _passwordHandler.TryCreatePasswordHash(loginRequest.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             // Get user
-            User user = await _userContext.GetUserAsync(loginRequest.Login, cancelationToken);
+            User user = await _userRepository.GetUserAsync(loginRequest.Login, cancelationToken);
 
             // Check if user exists
             if (user is null)
@@ -65,7 +65,7 @@ namespace BurgerShop.Controllers
 
             // Authentication
             string scheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            ClaimsPrincipal claimsPrincipal = _claimsPrincipalGenerator.GenerateClaimsPrincipal(user.FirstName, user.LastName);
+            ClaimsPrincipal claimsPrincipal = _claimsPrincipalGenerator.GenerateClaimsPrincipal(user);
 
             // Authorization
             await HttpContext.SignInAsync(scheme, claimsPrincipal);
@@ -88,7 +88,7 @@ namespace BurgerShop.Controllers
             User user = (User)registrationRequest;
 
             // Check login in db
-            if (await _userContext.IsUserExistsAsync(user.Login))
+            if (await _userRepository.IsUserExistsAsync(user.Login))
             {
                 ModelState.AddModelError("Login exists", $"Логин {registrationRequest.Login} занят, используйте другой логин");
                 return View(nameof(Registration), registrationRequest);
@@ -106,7 +106,7 @@ namespace BurgerShop.Controllers
             user.PasswordSalt = passwordSalt;
 
             // Try add user in db
-            if (!await _userContext.TryCreateUserAsync(user))
+            if (!await _userRepository.TryCreateUserAsync(user))
             {
                 // If can't add user
                 ModelState.AddModelError("Unknown", "Не удалось добавить пользователя");
@@ -115,7 +115,7 @@ namespace BurgerShop.Controllers
 
             // Authentication
             string scheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            ClaimsPrincipal claimsPrincipal = _claimsPrincipalGenerator.GenerateClaimsPrincipal(user.FirstName, user.LastName);
+            ClaimsPrincipal claimsPrincipal = _claimsPrincipalGenerator.GenerateClaimsPrincipal(user);
 
             // Authorization
             await HttpContext.SignInAsync(scheme, claimsPrincipal);

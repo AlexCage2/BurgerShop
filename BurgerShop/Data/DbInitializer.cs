@@ -1051,7 +1051,7 @@ namespace BurgerShop.Data
                         (@id4, '2020-10-14', (SELECT user_id FROM users WHERE login = 'younguser' LIMIT 1))
                         ;";
 
-                    GenerateGuids(command, 1, 40);
+                    GenerateGuids(command, 1, 4);
 
                     await command.ExecuteNonQueryAsync();
 

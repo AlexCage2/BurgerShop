@@ -53,3 +53,19 @@ body {
 .add-menu:hover, .remove-menu:hover {
     cursor:pointer;
 }
+
+.mr-10{
+    margin-right: 10px;
+}
+
+.page-num {
+    width: 50px;
+}
+
+input.submit-link {
+    font-weight: bold;
+    border: none;
+    background: none;
+    padding-bottom: 1px;
+    cursor: pointer;
+}

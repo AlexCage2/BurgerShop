@@ -1,7 +1,7 @@
 ﻿using BurgerShop.Data;
+using BurgerShop.Data.Repositories;
 using BurgerShop.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BurgerShop.Configuration
 {
@@ -45,10 +45,16 @@ namespace BurgerShop.Configuration
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton(_ => 
-                new UserContext(configuration.GetConnectionString("DefaultConnection")));
-            services.AddSingleton(_ =>
-                new MenuContext(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IUserRepository>(_ => 
+                new UserRepository(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IMenuRepository>(_ =>
+                new MenuRepository(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IOrderRepository>(_ =>
+                new OrderRepository(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IPurchaseRepository>(_ =>
+                new PurchaseRepository(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IBurgerRepository>(_ =>
+                new BurgerRepository(configuration.GetConnectionString("DefaultConnection")));
 
             return services;
         }

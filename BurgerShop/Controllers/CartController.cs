@@ -1,6 +1,5 @@
 ﻿using BurgerShop.Data;
 using BurgerShop.Models.DataModels.Orders;
-using BurgerShop.Models.DataModels.ProductsAndDishes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,36 +9,24 @@ namespace BurgerShop.Controllers
     [Route("cart")]
     public class CartController : Controller
     {
-        private readonly MenuContext _menuContext;
+        private readonly IMenuRepository _menuRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IPurchaseRepository _purchaseRepository;
 
-        public CartController(MenuContext menuContext)
+        public CartController(IMenuRepository menuRepository, IOrderRepository orderRepository, IPurchaseRepository purchaseRepository)
         {
-            _menuContext = menuContext;
+            _menuRepository = menuRepository;
+            _orderRepository = orderRepository;
+            _purchaseRepository = purchaseRepository;
         }
 
-        [Route("")]
+        [HttpGet("")]
         public async Task<ActionResult> Index()
         {
-            Dictionary<MenuItem, int> purchases = new Dictionary<MenuItem, int>();
-
-            foreach (var menuItemName in HttpContext.Session.Keys)
-            {
-                MenuItem menuItem = await _menuContext.GetMenuItemAsync(menuItemName);
-                purchases.TryAdd(menuItem, int.Parse(HttpContext.Session.GetString(menuItemName)));
-            }
-
-            Order order = new Order
-            {
-                Id = new Guid(),
-                Order_Date = DateOnly.FromDateTime(DateTime.Now),
-                UserLogin = User.Identity.Name,
-                Purchases = purchases
-            };
-
-            return View(order);
+            return View(await Order.FromSession(HttpContext, _menuRepository));
         }
 
-        [Route("additem")]
+        [HttpPost("additem")]
         public ActionResult AddItem(string menuItemName, int count)
         {
             ISession session = HttpContext.Session; 
@@ -61,7 +48,7 @@ namespace BurgerShop.Controllers
             return RedirectToAction("Index", "Menu");
         }
 
-        [Route("removeitem")]
+        [HttpPost("removeitem")]
         public ActionResult RemoveItem(string menuItemName)
         {
             ISession session = HttpContext.Session;
@@ -74,6 +61,26 @@ namespace BurgerShop.Controllers
             session.Remove(menuItemName);
 
             return RedirectToAction("Index", "Cart");
+        }
+
+        [HttpGet("submit")]
+        public async Task<ActionResult> Submit()
+        {
+            ISession session = HttpContext.Session;
+
+            if (session.Keys.Count() == 0)
+            {
+                return RedirectToAction("Index", "Cart");
+            }
+
+            Order order = await Order.FromSession(HttpContext, _menuRepository);
+
+            await _orderRepository.CreateOrderAsync(order);
+            await _purchaseRepository.CreatePurchaseAsync(order);
+
+            session.Clear();
+
+            return RedirectToAction("Index", "Menu");
         }
     }
 }

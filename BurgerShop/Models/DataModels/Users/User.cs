@@ -1,4 +1,4 @@
-﻿using BurgerShop.Models.AuthenticationRequests;
+﻿using BurgerShop.Models.ApplicationModels.AuthenticationRequests;
 using System.Globalization;
 
 namespace BurgerShop.Models.DataModels.Users

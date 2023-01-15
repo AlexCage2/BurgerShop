@@ -1,0 +1,284 @@
+﻿@using BurgerShop.Models.ViewModels.Sales;
+@model SalesViewModel
+@{
+    ViewData["Title"] = "Sales Page";
+}
+<div class="text-center">
+    <h2 class="display-5">Продажи</h2>
+    <br />
+</div>
+
+<form>
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#itemsales" aria-expanded="true" aria-controls="collapseOne">
+                    Продажи по товарам
+                </button>
+            </h2>
+            <div id="itemsales" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="mr-10">Строк на странице:</span>
+                                <input class="mr-10 page-num" type="number" name="linesPerPageForItemsGroup" asp-for="PaginatorViewModel.LinesPerPageForItemsGroup" />
+                                <input class="btn btn-outline-dark" type="submit" value="Изменить" />
+                            </div>
+                            <div class="col-6">
+                                <span class="mr-10">За период:</span>
+                                <span>От </span>
+                                <input class="mr-10" type="date" name="startDateForItemsGroup" asp-for="FilterViewModel.StartDateForItemsGroup" />
+                                <span>До </span>
+                                <input class="mr-10" type="date" name="endDateForItemsGroup" asp-for="FilterViewModel.EndDateForItemsGroup" />
+                                <input type="submit" value="Найти" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Номер
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                asp-route-sortOrderForItemsGroup="@Model.SalesItemsSortViewModel.NameSort"
+                                asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPageForItemsGroup"
+                                asp-route-startDateForItemsGroup="@Model.FilterViewModel.StartDateForItemsGroup"
+                                asp-route-endDateForItemsGroup="@Model.FilterViewModel.EndDateForItemsGroup">Товар</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                asp-route-sortOrderForItemsGroup="@Model.SalesItemsSortViewModel.SummSort"
+                                asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPageForItemsGroup"
+                                asp-route-startDateForItemsGroup="@Model.FilterViewModel.StartDateForItemsGroup"
+                                asp-route-endDateForItemsGroup="@Model.FilterViewModel.EndDateForItemsGroup">Сумма продаж</a>
+                            </th>
+                        </tr>
+                        @foreach (var item in Model
+                        .SalesByItems
+                        )
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Name</td>
+                                <td>@item.Profit</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="input-group mb-3">
+                        @{
+                            if (Model.SalesByItems != null && Model.SalesByItems.Any())
+                            {
+                                int currentPage = Model.SalesByItems.FirstOrDefault().PageNumber;
+                                int numOfPages = Model.SalesByItems.FirstOrDefault().NumberOfPages;
+
+                                int minPaginatorPage = numOfPages == currentPage ? Math.Max(1, currentPage - 2) : Math.Max(1, currentPage - 1);
+                                int maxPaginatorPage = currentPage == 1 ? Math.Min(currentPage + 2, numOfPages) : Math.Min(currentPage + 1, numOfPages);
+
+                                for (int pageNumber = minPaginatorPage; pageNumber <= maxPaginatorPage; pageNumber++)
+                                {
+                                    if (pageNumber == currentPage)
+                                    {
+                                        <input class="btn btn-secondary" name="pageNumberForItemsGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForItemsGroup" value="@pageNumber" />
+                                    }
+                                    else
+                                    {
+                                        <input class="btn btn-outline-secondary" name="pageNumberForItemsGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForItemsGroup" value="@pageNumber" />
+                                    }
+
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>         
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#daysales" aria-expanded="false" aria-controls="collapseTwo">
+                    Продажи по дням
+                </button>
+            </h2>
+            <div id="daysales" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="mr-10">Строк на странице:</span>
+                                <input class="mr-10 page-num" type="number" name="linesPerPageForDaysGroup" asp-for="PaginatorViewModel.LinesPerPageForDaysGroup" />
+                                <input type="submit" value="Изменить" class="btn btn-outline-dark" />
+                            </div>
+                            <div class="col-6">
+                                <span class="mr-10">За период:</span>
+                                <span>От </span>
+                                <input class="mr-10" type="date" name="startDateForDaysGroup" asp-for="FilterViewModel.StartDateForDaysGroup" />
+                                <span>До </span>
+                                <input class="mr-10" type="date" name="endDateForDaysGroup" asp-for="FilterViewModel.EndDateForDaysGroup" />
+                                <input type="submit" value="Найти" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Номер
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForDaysGroup="@Model.SalesDaysSortViewModel.DateSort"
+                                asp-route-linesPerPageForDaysGroup="@Model.PaginatorViewModel.LinesPerPageForDaysGroup"
+                                asp-route-startDateForDaysGroup="@Model.FilterViewModel.StartDateForDaysGroup"
+                                asp-route-endDateForDaysGroup="@Model.FilterViewModel.EndDateForDaysGroup">День</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                asp-route-sortOrderForDaysGroup="@Model.SalesDaysSortViewModel.SummSort"
+                                asp-route-linesPerPageForDaysGroup="@Model.PaginatorViewModel.LinesPerPageForDaysGroup"
+                                asp-route-startDateForDaysGroup="@Model.FilterViewModel.StartDateForDaysGroup"
+                                asp-route-endDateForDaysGroup="@Model.FilterViewModel.EndDateForDaysGroup">Сумма продаж</a>
+                            </th>
+                        </tr>
+                        @foreach (var item in Model
+                        .SalesByDays
+                        )
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Date</td>
+                                <td>@item.Profit</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="input-group mb-3">
+                        @{
+                            if (Model.SalesByDays != null && Model.SalesByDays.Any())
+                            {
+                                int currentPage = Model.SalesByDays.FirstOrDefault().PageNumber;
+                                int numOfPages = Model.SalesByDays.FirstOrDefault().NumberOfPages;
+
+                                int minPaginatorPage = numOfPages == currentPage ? Math.Max(1, currentPage - 2) : Math.Max(1, currentPage - 1);
+                                int maxPaginatorPage = currentPage == 1 ? Math.Min(currentPage + 2, numOfPages) : Math.Min(currentPage + 1, numOfPages);
+
+                                for (int pageNumber = minPaginatorPage; pageNumber <= maxPaginatorPage; pageNumber++)
+                                {
+                                    if (pageNumber == currentPage)
+                                    {
+                                        <input class="btn btn-secondary" name="pageNumberForDaysGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForDaysGroup" value="@pageNumber" />
+                                    }
+                                    else
+                                    {
+                                        <input class="btn btn-outline-secondary" name="pageNumberForDaysGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForDaysGroup" value="@pageNumber" />
+                                    }
+
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>                                    
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#purchases" aria-expanded="false" aria-controls="collapseThree">
+                    Список операций
+                </button>
+            </h2>            
+            <div id="purchases" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="mr-10">Строк на странице:</span>
+                                <input class="mr-10 page-num" type="number" name="linesPerPageForOperationsGroup" asp-for="PaginatorViewModel.LinesPerPageForOperationsGroup" />
+                                <input type="submit" value="Изменить" class="btn btn-outline-dark" />
+                            </div>
+                            <div class="col-6">
+                                <span class="mr-10">За период:</span>
+                                <span>От </span>
+                                <input class="mr-10" type="date" name="startDateForOperationsGroup" asp-for="FilterViewModel.StartDateForOperationsGroup" />
+                                <span>До </span>
+                                <input class="mr-10" type="date" name="endDateForOperationsGroup" asp-for="FilterViewModel.EndDateForOperationsGroup" />
+                                <input type="submit" value="Найти" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-6">
+                                <span class="mr-10">Поиск пользователя:</span>
+                                <input class="mr-10" type="text" name="userName" asp-for="FilterViewModel.UserName" />
+                                <input type="submit" value="Найти" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForOperationsGroup="@Model.SalesOperationsSortViewModel.DateSort"
+                                   asp-route-linesPerPageForOperationsGroup="@Model.PaginatorViewModel.LinesPerPageForOperationsGroup"
+                                   asp-route-startDateForOperationsGroup="@Model.FilterViewModel.StartDateForOperationsGroup"
+                                   asp-route-endDateForOperationsGroup="@Model.FilterViewModel.EndDateForOperationsGroup"
+                                   asp-route-userName="@Model.FilterViewModel.UserName">Дата</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForOperationsGroup="@Model.SalesOperationsSortViewModel.IdSort"
+                                   asp-route-linesPerPageForOperationsGroup="@Model.PaginatorViewModel.LinesPerPageForOperationsGroup"
+                                   asp-route-startDateForOperationsGroup="@Model.FilterViewModel.StartDateForOperationsGroup"
+                                   asp-route-endDateForOperationsGroup="@Model.FilterViewModel.EndDateForOperationsGroup"
+                                   asp-route-userName="@Model.FilterViewModel.UserName">Id Чека</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForOperationsGroup="@Model.SalesOperationsSortViewModel.UserSort"
+                                   asp-route-linesPerPageForOperationsGroup="@Model.PaginatorViewModel.LinesPerPageForOperationsGroup"
+                                   asp-route-startDateForOperationsGroup="@Model.FilterViewModel.StartDateForOperationsGroup"
+                                   asp-route-endDateForOperationsGroup="@Model.FilterViewModel.EndDateForOperationsGroup"
+                                   asp-route-userName="@Model.FilterViewModel.UserName">Пользователь </a>
+                            </th>
+                            <th>
+                                Состав чека
+                            </th>
+                        </tr>
+                        @foreach (var item in Model
+                            .Orders
+                        )
+                        {
+                            <tr>
+                                <td>@item.Order_Date</td>
+                                <td>@item.OrderId.ToString()</td>
+                                <td>@item.UserName</td>
+                                <td><a asp-controller="Sales" asp-action="Details" asp-route-orderId="@item.OrderId">Подробнее</a></td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="input-group mb-3">
+                        @{
+                            if (Model.Orders != null && Model.Orders.Any())
+                            {
+                                int currentPage = Model.Orders.FirstOrDefault().PageNumber;
+                                int numOfPages = Model.Orders.FirstOrDefault().NumberOfPages;
+
+                                int minPaginatorPage = numOfPages == currentPage ? Math.Max(1, currentPage - 2) : Math.Max(1, currentPage - 1);
+                                int maxPaginatorPage = currentPage == 1 ? Math.Min(currentPage + 2, numOfPages) : Math.Min(currentPage + 1, numOfPages);
+
+                                for (int pageNumber = minPaginatorPage; pageNumber <= maxPaginatorPage; pageNumber++)
+                                {
+                                    if (pageNumber == currentPage)
+                                    {
+                                        <input class="btn btn-secondary" name="pageNumberForOperationsGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForOperationsGroup" value="@pageNumber" />
+                                    }
+                                    else
+                                    {
+                                        <input class="btn btn-outline-secondary" name="pageNumberForOperationsGroup" type="submit" asp-for="PaginatorViewModel.PageNumberForOperationsGroup" value="@pageNumber" />
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

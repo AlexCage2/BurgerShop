@@ -1,4 +1,4 @@
-namespace BurgerShop.Models.BuisnessLogicModels
+namespace BurgerShop.Models
 {
     public class ErrorViewModel
     {

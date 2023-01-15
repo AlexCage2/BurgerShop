@@ -3,77 +3,69 @@
     ViewData["Title"] = "Order Page";
     int resultSum = 0;
 }
-<h3 class="mb-3">Order</h3>
-<form method="post">
-    <table class="table">
-        <thead>
+<div class="text-center">
+    <h2 class="display-5">Корзина</h2>
+    <br />
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Продукт
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Сумма
+            </th>
+            <th>
+                Отмена
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Purchases)
+        {
+            int currentSum = item.Key.Price * item.Value;
+            resultSum += currentSum;
             <tr>
-                <th>
-                    Продукт
-                </th>
-                <th>
-                    Цена
-                </th>
-                <th>
-                    Количество
-                </th>
-                <th>
-                    Сумма
-                </th>
-                <th>
-                    Отмена
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var item in Model.Purchases)
-            {
-                int currentSum = item.Key.Price * item.Value;
-                resultSum += currentSum;
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Key.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Key.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Value)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => currentSum)
-                    </td>
-                    <td>
-                        <form method="post" asp-controller="Cart" asp-action="RemoveItem">
-                            @Html.Hidden("menuItemName", item.Key.Name)
-                            <input type="submit" class="btn btn-primary" value="Удалить"/>
-                        </form>
-                    </td>
-                </tr>
-            }
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr class="table-success">
                 <td>
-                    Сумма покупки
+                    @Html.DisplayFor(modelItem => item.Key.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => resultSum)
+                    @Html.DisplayFor(modelItem => item.Key.Price)
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => currentSum)
+                </td>
+                <td>
+                    <form method="post" asp-controller="Cart" asp-action="RemoveItem">
+                        @Html.Hidden("menuItemName", item.Key.Name)
+                        <input type="submit" class="btn btn-primary" value="Удалить"/>
+                    </form>
+                </td>
             </tr>
-        </tbody>
-    </table>
-    <div>
-        <input type="submit" class="btn btn-primary" value="Подтвердить заказ" />
-    </div>
-    <div class="col-5">
-    </div>
-</form>
+        }
+        <tr class="table-success">
+            <td>
+                Сумма покупки
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => resultSum)
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <a class="btn btn-primary" asp-controller="Cart" asp-action="Submit">Подтвердить заказ</a>
+</div>

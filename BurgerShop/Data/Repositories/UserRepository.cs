@@ -1,13 +1,13 @@
 ﻿using BurgerShop.Models.DataModels.Users;
 using Npgsql;
 
-namespace BurgerShop.Data
+namespace BurgerShop.Data.Repositories
 {
-    public sealed class UserContext
+    public sealed class UserRepository : IUserRepository
     {
         private readonly string _connectionString;
 
-        public UserContext(string connectionString)
+        public UserRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -39,7 +39,7 @@ namespace BurgerShop.Data
                     command.Parameters.AddWithValue("@passHash", user.PasswordHash);
                     command.Parameters.AddWithValue("@passSalt", user.PasswordSalt);
                     command.Parameters.AddWithValue("@firstName", user.FirstName);
-                    command.Parameters.AddWithValue("@lastName", user.LastName); 
+                    command.Parameters.AddWithValue("@lastName", user.LastName);
                     command.Parameters.AddWithValue("@age", user.Age);
                     command.Parameters.AddWithValue("@role", user.Role);
 
@@ -48,7 +48,7 @@ namespace BurgerShop.Data
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return false;
@@ -86,7 +86,7 @@ namespace BurgerShop.Data
                     if (reader.HasRows && !reader.IsClosed)
                     {
                         while (await reader.ReadAsync())
-                        {                            
+                        {
                             User user = new User
                             {
                                 Id = reader.GetGuid(0),
@@ -101,7 +101,7 @@ namespace BurgerShop.Data
 
                             return user;
                         }
-                    }                    
+                    }
                 }
             }
 
@@ -171,7 +171,7 @@ namespace BurgerShop.Data
                 {
                     if (reader.HasRows && !reader.IsClosed)
                     {
-                        while(await reader.ReadAsync())
+                        while (await reader.ReadAsync())
                         {
                             if (reader.GetInt32(0) > 0)
                             {

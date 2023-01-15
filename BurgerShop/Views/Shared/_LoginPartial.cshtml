@@ -1,8 +1,9 @@
-﻿@if (User.Identity.IsAuthenticated)
+﻿@using System.Security.Claims;
+@if (User.Identity.IsAuthenticated)
 {
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Manage">Привет, @User.Identity?.Name</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Manage">Привет, @User.FindFirst(ClaimTypes.Upn).Value</a>
         </li>
         <li class="nav-item">
             <form method="get" class="form-inline" asp-area="" asp-controller="Authentication" asp-action="Logout">

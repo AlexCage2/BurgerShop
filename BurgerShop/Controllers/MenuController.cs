@@ -8,24 +8,27 @@ namespace BurgerShop.Controllers
     [Route("menu")]
     public class MenuController : Controller
     {
-        private readonly MenuContext _menuContext;
-        public MenuController(MenuContext menuContext)
+        private readonly IMenuRepository _menuRepository;
+        private readonly IBurgerRepository _burgerRepository;
+
+        public MenuController(IMenuRepository menuRepository, IBurgerRepository burgerRepository)
         {
-            _menuContext = menuContext;
+            _menuRepository = menuRepository;
+            _burgerRepository = burgerRepository;
         }
 
         // GET: Burgers
         [HttpGet("")]
         public async Task<ActionResult> Index()
         {
-            return View(await _menuContext.GetMenuItemsAsync());
+            return View(await _menuRepository.GetMenuItemsAsync());
         }
 
         // GET: Burgers/Details/5
         [HttpGet("details/{burgerName}")]
         public async Task<ActionResult> Details(string burgerName)
         {
-            return View(await _menuContext.GetBurgerAsync(burgerName));
+            return View(await _burgerRepository.GetBurgerAsync(burgerName));
         }
     }
 }

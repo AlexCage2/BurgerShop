@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BurgerShop.Models.AuthenticationRequests
+namespace BurgerShop.Models.ApplicationModels.AuthenticationRequests
 {
     public class LoginRequest
     {
