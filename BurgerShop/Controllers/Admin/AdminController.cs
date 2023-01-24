@@ -14,11 +14,11 @@ namespace BurgerShop.Controllers.Admin
             return RedirectToAction("Index", "Sales");
         }
 
-        // GET: Marketing
-        [HttpGet("marketing")]
-        public IActionResult Marketing()
+        // GET: Burgers
+        [HttpGet("burgers")]
+        public IActionResult Burgers()
         {
-            return RedirectToAction("Index", "Marketing");
+            return RedirectToAction("Index", "Burgers");
         }
 
         // GET: Warehouse

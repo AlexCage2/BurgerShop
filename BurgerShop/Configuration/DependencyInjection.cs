@@ -55,6 +55,8 @@ namespace BurgerShop.Configuration
                 new PurchaseRepository(configuration.GetConnectionString("DefaultConnection")));
             services.AddSingleton<IBurgerRepository>(_ =>
                 new BurgerRepository(configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IRecipesRepository>(_ =>
+                new RecipesRepository(configuration.GetConnectionString("DefaultConnection")));
 
             return services;
         }

@@ -1,0 +1,97 @@
+﻿@using BurgerShop.Models.ViewModels.Burgers;
+@model BurgerViewModel
+
+@{
+    ViewData["Title"] = "Burgers Page";
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="text-center">
+    <h2 class="display-5">Бургеры</h2>
+    <br />
+</div>
+
+<form>
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#itemsales" aria-expanded="true" aria-controls="collapseOne">
+                    Бургеры
+                </button>
+            </h2>
+            <div id="itemsales" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="mr-10">Строк на странице:</span>
+                                <input class="mr-10 page-num" type="number" name="linesPerPageForItemsGroup" asp-for="PaginatorViewModel.LinesPerPage" />
+                                <input class="btn btn-outline-dark" type="submit" value="Изменить" />
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Номер
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.NameSort"
+                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Товар</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.SummSort"
+                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Сумма продаж</a>
+                            </th>
+                            <th>
+                                <a asp-action="Index"
+                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.SummSort"
+                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Тип</a>
+                            </th>
+                        </tr>
+                        @foreach (var item in Model
+                        .Burgers
+                        )
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Name</td>
+                                <td>@item.Price</td>
+                                <td>@item.BurgerType</td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="input-group mb-3">
+                        @{
+                            if (Model.Burgers != null && Model.Burgers.Any())
+                            {
+                                int currentPage = Model.Burgers.FirstOrDefault().PageNumber;
+                                int numOfPages = Model.Burgers.FirstOrDefault().NumberOfPages;
+
+                                int minPaginatorPage = numOfPages == currentPage ? Math.Max(1, currentPage - 2) : Math.Max(1, currentPage - 1);
+                                int maxPaginatorPage = currentPage == 1 ? Math.Min(currentPage + 2, numOfPages) : Math.Min(currentPage + 1, numOfPages);
+
+                                for (int pageNumber = minPaginatorPage; pageNumber <= maxPaginatorPage; pageNumber++)
+                                {
+                                    if (pageNumber == currentPage)
+                                    {
+                                        <input class="btn btn-secondary" name="pageNumberForItemsGroup" type="submit" asp-for="PaginatorViewModel.PageNumber" value="@pageNumber" />
+                                    }
+                                    else
+                                    {
+                                        <input class="btn btn-outline-secondary" name="pageNumberForItemsGroup" type="submit" asp-for="PaginatorViewModel.PageNumber" value="@pageNumber" />
+                                    }
+
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -110,11 +110,6 @@ namespace BurgerShop.Data.Repositories
                     FROM subquery
                     ";
 
-                string sqlQuery2 = @"
-                    LIMIT @limit
-                    OFFSET @offset
-                    ";
-
                 string sqlOrder = "";
                 switch (sortOrder)
                 {
@@ -137,6 +132,11 @@ namespace BurgerShop.Data.Repositories
                         sqlOrder = "ORDER BY order_date DESC";
                         break;
                 }
+
+                string sqlQuery2 = @"
+                    LIMIT @limit
+                    OFFSET @offset
+                    ";
 
                 sqlQuery += sqlOrder + sqlQuery2;
 

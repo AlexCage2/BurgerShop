@@ -10,8 +10,8 @@ namespace BurgerShop.Controllers.Admin
     [Route("admin/sales")]
     public class SalesController : Controller
     {
-        public readonly IPurchaseRepository _purchaseRepository;
-        public readonly IOrderRepository _orderRepository;
+        private readonly IPurchaseRepository _purchaseRepository;
+        private readonly IOrderRepository _orderRepository;
 
         public SalesController(IPurchaseRepository purchaseRepository, IOrderRepository orderRepository)
         {
@@ -41,11 +41,7 @@ namespace BurgerShop.Controllers.Admin
             int linesPerPageForOperationsGroup = 5
             )
         {
-            SalesItemsSortViewModel itemsSortViewModel = new SalesItemsSortViewModel(sortOrderForItemsGroup);
-            SalesDaysSortViewModel daysSortViewModel = new SalesDaysSortViewModel(sortOrderForDaysGroup);
-            SalesOperationsSortViewModel operationsSortViewModel = new SalesOperationsSortViewModel(sortOrderForOperationsGroup);
-
-            SalesFilterViewModel filterViewModel = new SalesFilterViewModel
+            var filterViewModel = new SalesFilterViewModel
             {
                 StartDateForItemsGroup = startDateForItemsGroup,
                 EndDateForItemsGroup = endDateForItemsGroup,
@@ -56,7 +52,7 @@ namespace BurgerShop.Controllers.Admin
                 UserName = userName
             };
 
-            SalesPaginatorViewModel paginatorViewModel = new SalesPaginatorViewModel
+            var paginatorViewModel = new SalesPaginatorViewModel
             {
                 PageNumberForItemsGroup = pageNumberForItemsGroup,
                 LinesPerPageForItemsGroup = linesPerPageForItemsGroup,
@@ -66,7 +62,11 @@ namespace BurgerShop.Controllers.Admin
                 LinesPerPageForOperationsGroup = linesPerPageForOperationsGroup
             };
 
-            SalesViewModel viewModel = new SalesViewModel
+            var itemsSortViewModel = new SalesItemsSortViewModel(sortOrderForItemsGroup);
+            var daysSortViewModel = new SalesDaysSortViewModel(sortOrderForDaysGroup);
+            var operationsSortViewModel = new SalesOperationsSortViewModel(sortOrderForOperationsGroup);
+
+            var viewModel = new SalesViewModel
             {
                 Orders = await _orderRepository.GetItemsAsync(DateOnly.Parse(startDateForOperationsGroup), DateOnly.Parse(endDateForOperationsGroup), userName, linesPerPageForOperationsGroup, pageNumberForOperationsGroup, sortOrderForOperationsGroup, cancellationToken),
                 SalesByItems = await _purchaseRepository.GetSalesByItemsAsync(DateOnly.Parse(startDateForItemsGroup), DateOnly.Parse(endDateForItemsGroup), linesPerPageForItemsGroup, pageNumberForItemsGroup, sortOrderForItemsGroup, cancellationToken),

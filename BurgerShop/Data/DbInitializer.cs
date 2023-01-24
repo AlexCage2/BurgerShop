@@ -37,7 +37,7 @@ namespace BurgerShop.Data
             await TryCreateTablePurchacesAsync(connectionString);
         }
 
-        // Create DataBase
+        // Create DataBase for project
         public static async Task<bool> TryCreateDbAsync(string connectionString, string dbName)
         {
             try
