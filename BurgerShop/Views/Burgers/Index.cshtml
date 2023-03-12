@@ -5,9 +5,6 @@
     ViewData["Title"] = "Burgers Page";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div class="text-center">
     <h2 class="display-5">Бургеры</h2>
     <br />
@@ -23,11 +20,14 @@
             </h2>
             <div id="itemsales" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
+                    <p>
+                        <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
+                    </p>
                     <div class="container">
                         <div class="row">
                             <div class="col-6">
                                 <span class="mr-10">Строк на странице:</span>
-                                <input class="mr-10 page-num" type="number" name="linesPerPageForItemsGroup" asp-for="PaginatorViewModel.LinesPerPage" />
+                                <input class="mr-10 page-num" type="number" name="linesPerPage" asp-for="PaginatorViewModel.LinesPerPage" />
                                 <input class="btn btn-outline-dark" type="submit" value="Изменить" />
                             </div>
                         </div>
@@ -35,22 +35,28 @@
                     <table class="table">
                         <tr>
                             <th>
-                                Номер
+                                Id Бургера
                             </th>
                             <th>
                                 <a asp-action="Index"
-                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.NameSort"
-                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Товар</a>
+                                   asp-route-sortOrder="@Model.SortViewModel.NameSort"
+                                   asp-route-burgerName="@Model.FilterViewModel.BurgerName"
+                                   asp-route-linesPerPage="@Model.PaginatorViewModel.LinesPerPage">Наименование</a>
                             </th>
                             <th>
                                 <a asp-action="Index"
-                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.SummSort"
-                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Сумма продаж</a>
+                                   asp-route-sortOrder="@Model.SortViewModel.SummSort"
+                                   asp-route-burgerName="@Model.FilterViewModel.BurgerName"
+                                   asp-route-linesPerPage="@Model.PaginatorViewModel.LinesPerPage">Цена</a>
                             </th>
                             <th>
                                 <a asp-action="Index"
-                                   asp-route-sortOrderForItemsGroup="@Model.SortViewModel.SummSort"
-                                   asp-route-linesPerPageForItemsGroup="@Model.PaginatorViewModel.LinesPerPage">Тип</a>
+                                   asp-route-sortOrder="@Model.SortViewModel.TypeSort"
+                                   asp-route-burgerName="@Model.FilterViewModel.BurgerName"
+                                   asp-route-linesPerPage="@Model.PaginatorViewModel.LinesPerPage">Тип</a>
+                            </th>
+                            <th>
+                                
                             </th>
                         </tr>
                         @foreach (var item in Model
@@ -62,6 +68,9 @@
                                 <td>@item.Name</td>
                                 <td>@item.Price</td>
                                 <td>@item.BurgerType</td>
+                                <td>
+                                    <a asp-action="Edit">Edit</a> | <a asp-action="Details">Details</a> | <a asp-action="Delete">Delete</a>
+                                </td>
                             </tr>
                         }
                     </table>
@@ -85,7 +94,6 @@
                                     {
                                         <input class="btn btn-outline-secondary" name="pageNumberForItemsGroup" type="submit" asp-for="PaginatorViewModel.PageNumber" value="@pageNumber" />
                                     }
-
                                 }
                             }
                         }

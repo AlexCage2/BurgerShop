@@ -1,5 +1,4 @@
 ﻿using BurgerShop.Models.ApplicationModels.Burgers;
-using BurgerShop.Models.ApplicationModels.Sales;
 using BurgerShop.Models.DataModels.ProductsAndDishes;
 using Npgsql;
 
@@ -8,8 +7,8 @@ namespace BurgerShop.Data.Repositories
     public class BurgerRepository : IBurgerRepository
     {
         private readonly string _connectionString;
-
-        public BurgerRepository(string connectionString)
+        
+        public BurgerRepository(string connectionString) 
         {
             _connectionString = connectionString;
         }
@@ -40,7 +39,7 @@ namespace BurgerShop.Data.Repositories
                         JOIN burger_types AS t
                         ON b.burger_type_id = t.burger_type_id
                     WHERE name LIKE @burgerName
-                    ;";
+                    ";
 
                 string sqlOrder = "";
                 switch (sortOrder)
@@ -99,6 +98,8 @@ namespace BurgerShop.Data.Repositories
                         }
                     }
                 }
+
+                return result;
             }
         }
 

@@ -21,7 +21,7 @@ namespace BurgerShop.Controllers.Admin
         // GET: Index
         [HttpGet("overview")]
         public async Task<ActionResult> Index(
-            string burgerName,
+            string burgerName = "",
             int linesPerPage = 5,
             int pageNumber = 1,
             string sortOrder = "NameAsc"
@@ -42,7 +42,7 @@ namespace BurgerShop.Controllers.Admin
 
             var viewModel = new BurgerViewModel
             {
-                Burgers = _burgerRepository.GetBurgersAsync(),
+                Burgers = await _burgerRepository.GetItemsAsync(burgerName, linesPerPage, pageNumber, sortOrder),
                 FilterViewModel = filterViewModel,
                 PaginatorViewModel = paginatorViewModel,
                 SortViewModel = sortViewModel
