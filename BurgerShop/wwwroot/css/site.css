@@ -69,3 +69,7 @@ input.submit-link {
     padding-bottom: 1px;
     cursor: pointer;
 }
+
+.extra {
+    margin-top: 30px;
+}
