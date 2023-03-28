@@ -17,9 +17,9 @@ namespace BurgerShop.Configuration
                 });
 
             services.AddDistributedMemoryCache();
-            services.AddSession(optons =>
+            services.AddSession(options =>
             {
-                optons.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
 
             return services;
